@@ -1,7 +1,7 @@
-from gensim.models import word2vec
 from Bio import SeqIO
 import sys
 from gensim.models import word2vec
+import csv
 
 
 def split_ngrams(seq, n):
@@ -29,11 +29,40 @@ def generate_corpusfile(corpus_fname, n, out):
     f = open(out, "w")
     for r in SeqIO.parse(corpus_fname, "fasta"):
         ngram_patterns = split_ngrams(r.seq, n)
-        for ngram_pattern in ngram_patterns:
-            f.write(" ".join(ngram_pattern) + "\n")
+        for words in ngram_patterns:
+            f.write(" ".join(words) + "\n")
         sys.stdout.write(".")
 
     f.close()
+
+def generate_corpusfile_csv(corpus_fname, n, out, sequence_column, **kwargs):
+    '''
+    Args:
+        corpus_fname: corpus file name
+        n: the number of chunks to split. In other words, "n" for "n-gram"
+        out: output corpus file path
+        sequence_column: column in csv containing sequence
+        **kwargs: arguments for csv reader, e.g. delimiter
+    Description:
+        Protvec uses word2vec inside, and it requires to load corpus file
+        to generate corpus.
+    '''
+    f = open(out, "w")
+    reader = csv.reader(open(corpus_fname, "rb"), **kwargs)
+    header = reader.next()
+    sequence_column_index = header.index(sequence_column)
+
+    sequences = [record[sequence_column_index] for record in reader]
+    all_ngram_patterns = [split_ngrams(x, n) for x in sequences]
+    sentences = [" ".join(words) for ngram_patterns in all_ngram_patterns for words in ngram_patterns]
+    [f.write(x + "\n") for x in sentences]
+    sys.stdout.write(".")
+    f.close()
+
+
+def read_corpusfile(file):
+    corpus = word2vec.Text8Corpus(file)
+    return corpus
 
 
 def load_protvec(model_fname):
@@ -61,9 +90,9 @@ class ProtVec(word2vec.Word2Vec):
             raise Exception("Either corpus_fname or corpus is needed!")
 
         if corpus_fname is not None:
-            print 'Generate Corpus file from fasta file...'
+            print('Generate Corpus file from fasta file...')
             generate_corpusfile(corpus_fname, n, out)
-            corpus = word2vec.Text8Corpus(out)
+            corpus = read_corpusfile(out)
 
         word2vec.Word2Vec.__init__(self, corpus, size=size, sg=sg, window=window, min_count=min_count, workers=workers)
 
