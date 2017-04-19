@@ -11,9 +11,7 @@ def split_ngrams(seq, n):
     a, b, c = zip(*[iter(seq)]*n), zip(*[iter(seq[1:])]*n), zip(*[iter(seq[2:])]*n)
     str_ngrams = []
     for ngrams in [a,b,c]:
-        x = []
-        for ngram in ngrams:
-            x.append("".join(ngram))
+        x = ["".join(ngram) for ngram in ngrams]
         str_ngrams.append(x)
     return str_ngrams
 
