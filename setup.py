@@ -7,7 +7,7 @@ description = 'A new approach for representing biological sequences'
 REQUIRED_PACKAGES = [
     'gensim==3.4.0',
     'tqdm>=2.0.0',
-    'pyfasta==0.5.2',
+    'pyfaidx==0.7.1',
     'numpy>=1.18.1'
 ]
 

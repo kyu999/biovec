@@ -1,4 +1,4 @@
-from pyfasta import Fasta
+from pyfaidx import Fasta
 from tqdm import tqdm
 
 
