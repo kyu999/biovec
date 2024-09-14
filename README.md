@@ -5,6 +5,12 @@ A new approaches for representing biological sequences.
 The algorithm comes from this paper: "[ProtVec: A Continuous Distributed Representation of
 Biological Sequences](http://arxiv.org/pdf/1503.05140v1.pdf)"
 
+## ⚠️ **Repository Archived – No Longer Maintained**
+
+This repository is no longer actively maintained and will not receive updates or bug fixes. The project may be outdated, and some components may not work with current software versions. Feel free to explore the code, but please be aware that it may not function as expected in modern environments.
+
+Thank you for your understanding.
+
 ### Installation
 ```
 pip install biovec
